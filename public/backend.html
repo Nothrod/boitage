@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Map Boitage - Interface principale
+    |--------------------------------------------------------------------------
+    |
+    | Fichier : public/backend.html
+    |
+    | Rôle :
+    | Interface principale après connexion.
+    |
+    |--------------------------------------------------------------------------
+    -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Map Boitage</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- ========================================================= -->
+    <!-- Barre supérieure -->
+    <!-- ========================================================= -->
+
+    <header class="topbar">
+
+        <div class="logo">
+            📬 Map Boitage
+        </div>
+
+        <div class="user-info">
+
+            <span id="currentUser">
+                Chargement...
+            </span>
+
+            <button
+                id="logoutBtn"
+                class="btn btn-danger"
+            >
+                Déconnexion
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- ========================================================= -->
+    <!-- Layout principal -->
+    <!-- ========================================================= -->
+
+    <div class="layout">
+
+        <!-- ===================================================== -->
+        <!-- Menu latéral -->
+        <!-- ===================================================== -->
+
+        <aside class="sidebar">
+
+            <button
+                class="menu-btn"
+                data-section="campaigns"
+            >
+                📋 Campagnes
+            </button>
+
+            <button
+                class="menu-btn"
+                data-section="profile"
+            >
+                👤 Profil
+            </button>
+
+            <button
+                id="menuSectors"
+                class="menu-btn admin-only"
+                data-section="sectors"
+            >
+                🗺️ Secteurs
+            </button>
+
+            <button
+                id="menuUsers"
+                class="menu-btn admin-only"
+                data-section="users"
+            >
+                👥 Utilisateurs
+            </button>
+
+            <button
+                id="menuTeams"
+                class="menu-btn admin-only"
+                data-section="teams"
+            >
+                👨‍👩‍👧‍👦 Équipes
+            </button>
+
+            <button
+                id="menuArchives"
+                class="menu-btn admin-only"
+                data-section="archives"
+            >
+                📦 Archives
+            </button>
+
+        </aside>
+
+        <!-- ===================================================== -->
+        <!-- Contenu principal -->
+        <!-- ===================================================== -->
+
+        <main class="content">
+
+            <!-- ================================================ -->
+            <!-- Section campagnes -->
+            <!-- ================================================ -->
+
+            <section
+                id="campaignsSection"
+                class="section"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Campagnes actives
+                    </h2>
+
+                    <button
+                        id="createCampaignBtn"
+                        class="btn btn-primary manager-only"
+                    >
+                        Nouvelle campagne
+                    </button>
+
+                </div>
+
+                <div id="campaignsContainer">
+                    Chargement...
+                </div>
+
+            </section>
+
+            <!-- ================================================ -->
+            <!-- Section profil -->
+            <!-- ================================================ -->
+
+            <section
+                id="profileSection"
+                class="section hidden"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Mon profil
+                    </h2>
+
+                </div>
+
+                <div class="card">
+
+                    <form id="profileForm">
+
+                        <div class="user-info-card">
+
+                            <div class="info-row">
+                                <strong>Nom :</strong>
+                                <span id="profileName">Chargement...</span>
+                            </div>
+
+                            <div class="info-row">
+                                <strong>Identifiant :</strong>
+                                <span id="profileUsername">Chargement...</span>
+                            </div>
+
+                            <div class="info-row">
+                                <strong>Rôle :</strong>
+                                <span id="profileRole">Chargement...</span>
+                            </div>
+
+                            <div class="info-row">
+                                <strong>Équipe(s) :</strong>
+                                <span id="profileTeams">Chargement...</span>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="profileEmail">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="profileEmail"
+                                placeholder="exemple@email.fr"
+                                autocomplete="email"
+                            >
+
+                        </div>
+
+                        <hr>
+
+                        <h3>
+                            Changer le mot de passe
+                        </h3>
+
+                        <p class="subtitle">
+                            Laissez les champs de mot de passe vides si vous voulez seulement modifier l'email.
+                        </p>
+
+                        <div class="form-group">
+
+                            <label for="profileCurrentPassword">
+                                Mot de passe actuel
+                            </label>
+
+                            <input
+                                type="password"
+                                id="profileCurrentPassword"
+                                autocomplete="current-password"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="profileNewPassword">
+                                Nouveau mot de passe
+                            </label>
+
+                            <input
+                                type="password"
+                                id="profileNewPassword"
+                                minlength="8"
+                                autocomplete="new-password"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="profileConfirmPassword">
+                                Confirmation du nouveau mot de passe
+                            </label>
+
+                            <input
+                                type="password"
+                                id="profileConfirmPassword"
+                                minlength="8"
+                                autocomplete="new-password"
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+                            Enregistrer le profil
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- ================================================ -->
+            <!-- Section secteurs -->
+            <!-- ================================================ -->
+
+            <section
+                id="sectorsSection"
+                class="section hidden"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Secteurs
+                    </h2>
+
+                    <button
+                        id="createSectorBtn"
+                        class="btn btn-primary admin-only"
+                    >
+                        Nouveau secteur
+                    </button>
+
+                </div>
+
+                <div id="sectorsContainer">
+                    Aucun secteur.
+                </div>
+
+            </section>
+
+            <!-- ================================================ -->
+            <!-- Section utilisateurs -->
+            <!-- ================================================ -->
+
+            <section
+                id="usersSection"
+                class="section hidden"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Utilisateurs
+                    </h2>
+
+                    <button
+                        id="createUserBtn"
+                        class="btn btn-primary"
+                    >
+                        Nouvel utilisateur
+                    </button>
+
+                </div>
+
+                <div id="usersContainer">
+                    Aucun utilisateur.
+                </div>
+
+            </section>
+
+            <!-- ================================================ -->
+            <!-- Section équipes -->
+            <!-- ================================================ -->
+
+            <section
+                id="teamsSection"
+                class="section hidden"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Équipes
+                    </h2>
+
+                    <button
+                        id="createTeamBtn"
+                        class="btn btn-primary"
+                    >
+                        Nouvelle équipe
+                    </button>
+
+                </div>
+
+                <div id="teamsContainer">
+                    Aucune équipe.
+                </div>
+
+            </section>
+
+            <!-- ================================================ -->
+            <!-- Section archives -->
+            <!-- ================================================ -->
+
+            <section
+                id="archivesSection"
+                class="section hidden"
+            >
+
+                <div class="section-header">
+
+                    <h2>
+                        Archives
+                    </h2>
+
+                </div>
+
+                <div id="archivesContainer">
+                    Aucune archive.
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Popup campagne création / modification -->
+    <!-- ========================================================= -->
+
+    <div
+        id="campaignModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <h3 id="campaignModalTitle">
+                Nouvelle campagne
+            </h3>
+
+            <form id="campaignForm">
+
+                <input
+                    type="hidden"
+                    id="campaignEditId"
+                    value=""
+                >
+
+                <div class="form-group">
+
+                    <label for="campaignName">
+                        Nom de la campagne
+                    </label>
+
+                    <input
+                        type="text"
+                        id="campaignName"
+                        required
+                        placeholder="Ex : Bulletin municipal juin"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="campaignTeam">
+                        Équipe
+                    </label>
+
+                    <select
+                        id="campaignTeam"
+                        required
+                    >
+                        <option value="">
+                            Sélectionner une équipe
+                        </option>
+                    </select>
+
+                </div>
+
+                <label>
+                    Secteurs
+                </label>
+
+                <div
+                    id="campaignSectors"
+                    class="checkbox-list"
+                >
+                    Chargement...
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancelCampaignBtn"
+                        class="btn"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="saveCampaignBtn"
+                        class="btn btn-primary"
+                    >
+                        Créer
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Popup secteur création / modification -->
+    <!-- ========================================================= -->
+
+    <div
+        id="sectorModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <h3 id="sectorModalTitle">
+                Nouveau secteur
+            </h3>
+
+            <form id="sectorForm">
+
+                <div class="form-group">
+
+                    <label for="sectorName">
+                        Nom du secteur
+                    </label>
+
+                    <input
+                        type="text"
+                        id="sectorName"
+                        required
+                        placeholder="Ex : Centre village"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="sectorColor">
+                        Couleur du secteur
+                    </label>
+
+                    <input
+                        type="color"
+                        id="sectorColor"
+                        value="#3388ff"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="sectorStreets">
+                        Rues du secteur
+                    </label>
+
+                    <textarea
+                        id="sectorStreets"
+                        rows="7"
+                        placeholder="Une rue par ligne&#10;Ex : Rue principale&#10;Rue de l'école&#10;Impasse des fleurs"
+                    ></textarea>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancelSectorBtn"
+                        class="btn"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="saveSectorBtn"
+                        class="btn btn-primary"
+                    >
+                        Créer le secteur
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+	
+	    <!-- ========================================================= -->
+    <!-- Popup confirmation suppression secteur -->
+    <!-- ========================================================= -->
+
+    <div
+        id="deleteSectorModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <h3>
+                Supprimer un secteur
+            </h3>
+
+            <p>
+                Vous êtes sur le point de supprimer définitivement :
+            </p>
+
+            <p>
+                <strong id="deleteSectorName">
+                    Secteur
+                </strong>
+            </p>
+
+            <p class="warning-text">
+                Cette action supprimera également :
+            </p>
+
+            <ul class="delete-warning-list">
+
+                <li>
+                    Les rues du secteur
+                </li>
+
+                <li>
+                    Les validations du secteur
+                </li>
+
+                <li>
+                    Les validations des rues
+                </li>
+
+                <li>
+                    Les liens avec les campagnes
+                </li>
+
+            </ul>
+
+            <p class="warning-text">
+                Cette action est irréversible.
+            </p>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancelDeleteSectorBtn"
+                    class="btn"
+                >
+                    Annuler
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmDeleteSectorBtn"
+                    class="btn btn-danger"
+                >
+                    Supprimer
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Popup équipe -->
+    <!-- ========================================================= -->
+
+    <div
+        id="teamModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <h3>
+                Nouvelle équipe
+            </h3>
+
+            <form id="teamForm">
+
+                <div class="form-group">
+
+                    <label for="teamName">
+                        Nom de l'équipe
+                    </label>
+
+                    <input
+                        type="text"
+                        id="teamName"
+                        required
+                        placeholder="Ex : Équipe Nord"
+                    >
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancelTeamBtn"
+                        class="btn"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Créer l'équipe
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Popup utilisateur création / modification -->
+    <!-- ========================================================= -->
+
+    <div
+        id="userModal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <h3 id="userModalTitle">
+                Nouvel utilisateur
+            </h3>
+
+            <form id="userForm">
+
+                <input
+                    type="hidden"
+                    id="userEditId"
+                    value=""
+                >
+
+                <div class="form-group">
+
+                    <label for="userName">
+                        Nom complet
+                    </label>
+
+                    <input
+                        type="text"
+                        id="userName"
+                        required
+                        placeholder="Ex : Jean Dupont"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="userUsername">
+                        Identifiant de connexion
+                    </label>
+
+                    <input
+                        type="text"
+                        id="userUsername"
+                        required
+                        placeholder="Ex : jdupont"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="userRole">
+                        Rôle
+                    </label>
+
+                    <select
+                        id="userRole"
+                        required
+                    >
+
+                        <option value="user">
+                            Utilisateur
+                        </option>
+
+                        <option value="manager">
+                            Manager d'équipe
+                        </option>
+
+                        <option value="admin">
+                            Administrateur
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Équipe(s)
+                    </label>
+
+                    <div
+                        id="userTeams"
+                        class="checkbox-list"
+                    >
+                        Chargement...
+                    </div>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancelUserBtn"
+                        class="btn"
+                    >
+                        Annuler
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="saveUserBtn"
+                        class="btn btn-primary"
+                    >
+                        Créer l'utilisateur
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Messages globaux -->
+    <!-- ========================================================= -->
+
+    <div
+        id="messageBox"
+        class="message-box"
+    ></div>
+
+    <!-- ========================================================= -->
+    <!-- Javascript -->
+    <!-- ========================================================= -->
+
+    <script src="/app.js?v=core-6"></script>
+
+    <script src="/campaigns-render.js?v=1"></script>
+    <script src="/campaigns-validation.js?v=1"></script>
+    <script src="/campaigns-modal.js?v=1"></script>
+    <script src="/campaigns-list.js?v=1"></script>
+    <script src="/campaigns.js?v=2"></script>
+
+    <script src="/sectors.js?v=sectors-3"></script>
+    <script src="/teams.js?v=teams-1"></script>
+    <script src="/users.js?v=users-teams-4"></script>
+    <script src="/archives.js?v=archives-1"></script>
+    <script src="/profile.js?v=profile-teams-2"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Map Boitage - Connexion
+    |--------------------------------------------------------------------------
+    |
+    | Fichier : public/index.html
+    |
+    | Rôle :
+    | Page de connexion de l'application.
+    |
+    | Fonctionnalités :
+    | - Connexion utilisateur
+    | - Accès à la récupération de mot de passe
+    |
+    | Après connexion :
+    | -> redirection vers /backend.html
+    |
+    |--------------------------------------------------------------------------
+    -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Map Boitage - Connexion</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Titre
+            |--------------------------------------------------------------------------
+            -->
+
+            <h1>📬 Map Boitage</h1>
+
+            <p class="subtitle">
+                Suivi des campagnes de distribution
+            </p>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Formulaire de connexion
+            |--------------------------------------------------------------------------
+            -->
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Identifiant
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        autocomplete="username"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        autocomplete="current-password"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Se connecter
+                </button>
+
+            </form>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Mot de passe oublié
+            |--------------------------------------------------------------------------
+            |
+            | Permet de générer un lien de réinitialisation.
+            |
+            |--------------------------------------------------------------------------
+            -->
+
+            <div class="forgot-password">
+
+                <a
+                    href="#"
+                    id="forgotPasswordLink"
+                >
+                    Mot de passe oublié ?
+                </a>
+
+            </div>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Formulaire de récupération
+            |--------------------------------------------------------------------------
+            |
+            | Caché par défaut.
+            | Affiché via login.js lors du clic sur le lien.
+            |
+            |--------------------------------------------------------------------------
+            -->
+
+            <form
+                id="forgotPasswordForm"
+                style="display:none;"
+            >
+
+                <div class="form-group">
+
+                    <label for="forgotUsername">
+                        Identifiant du compte
+                    </label>
+
+                    <input
+                        type="text"
+                        id="forgotUsername"
+                        autocomplete="username"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-secondary"
+                >
+                    Générer un lien de réinitialisation
+                </button>
+
+            </form>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Zone de message
+            |--------------------------------------------------------------------------
+            |
+            | Affichage :
+            | - erreurs
+            | - succès
+            | - lien de réinitialisation
+            |
+            |--------------------------------------------------------------------------
+            -->
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Javascript
+    |--------------------------------------------------------------------------
+    -->
+
+    <script src="/login.js"></script>
+
+</body>
+
+</html>

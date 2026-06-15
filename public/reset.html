@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Map Boitage - Réinitialisation du mot de passe
+    |--------------------------------------------------------------------------
+    |
+    | Fichier : public/reset.html
+    |
+    | Rôle :
+    | Permet à un utilisateur de définir un nouveau mot de passe
+    | après avoir utilisé le lien généré par "Mot de passe oublié".
+    |
+    | Fonctionnement :
+    | - l'utilisateur arrive avec un lien du type :
+    |   /reset.html?token=xxxxx
+    | - reset.js récupère le token dans l'URL
+    | - l'utilisateur saisit un nouveau mot de passe
+    | - reset.js appelle /api/reset-password
+    |
+    |--------------------------------------------------------------------------
+    -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Map Boitage - Nouveau mot de passe
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Titre
+            |--------------------------------------------------------------------------
+            -->
+
+            <h1>
+                🔐 Nouveau mot de passe
+            </h1>
+
+            <p class="subtitle">
+                Choisissez un nouveau mot de passe pour votre compte.
+            </p>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Formulaire de réinitialisation
+            |--------------------------------------------------------------------------
+            -->
+
+            <form id="resetPasswordForm">
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Nouveau mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirmation du mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Modifier mon mot de passe
+                </button>
+
+            </form>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Zone de message
+            |--------------------------------------------------------------------------
+            -->
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+            <!--
+            |--------------------------------------------------------------------------
+            | Retour connexion
+            |--------------------------------------------------------------------------
+            -->
+
+            <div class="small-link">
+
+                <a href="/">
+                    Retour à la connexion
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Javascript
+    |--------------------------------------------------------------------------
+    -->
+
+    <script src="/reset.js"></script>
+
+</body>
+
+</html>

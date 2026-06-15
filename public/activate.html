@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <!--
+    |--------------------------------------------------------------------------
+    | Map Boitage - Activation de compte
+    |--------------------------------------------------------------------------
+    |
+    | Fichier : public/activate.html
+    |
+    | Rôle :
+    | Permet à un utilisateur d'activer son compte à l'aide d'un
+    | lien d'activation envoyé par un administrateur.
+    |
+    | Fonctionnement :
+    |
+    | 1. L'administrateur crée un utilisateur.
+    | 2. Un lien d'activation est généré.
+    | 3. L'utilisateur ouvre le lien.
+    | 4. Le nom et l'identifiant sont affichés.
+    | 5. L'utilisateur peut renseigner son email, mais ce n'est pas obligatoire.
+    | 6. L'utilisateur choisit son mot de passe.
+    | 7. Le compte est activé.
+    |
+    |--------------------------------------------------------------------------
+    -->
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Map Boitage - Activation du compte</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <h1>
+                📬 Activation du compte
+            </h1>
+
+            <p class="subtitle">
+                Définissez votre mot de passe pour accéder à Map Boitage.
+            </p>
+
+            <!-- ===================================================== -->
+            <!-- Informations utilisateur -->
+            <!-- ===================================================== -->
+
+            <div
+                id="userInfo"
+                class="user-info-card"
+            >
+
+                <div class="info-row">
+
+                    <strong>
+                        Nom :
+                    </strong>
+
+                    <span id="userName">
+                        Chargement...
+                    </span>
+
+                </div>
+
+                <div class="info-row">
+
+                    <strong>
+                        Identifiant :
+                    </strong>
+
+                    <span id="userUsername">
+                        Chargement...
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- ===================================================== -->
+            <!-- Formulaire activation -->
+            <!-- ===================================================== -->
+
+            <form id="activateForm">
+
+                <!-- ============================================= -->
+                <!-- Email optionnel -->
+                <!-- ============================================= -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Adresse email
+                        <small>
+                            (optionnel)
+                        </small>
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                        placeholder="exemple@email.fr"
+                    >
+
+                </div>
+
+                <!-- ============================================= -->
+                <!-- Mot de passe -->
+                <!-- ============================================= -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <!-- ============================================= -->
+                <!-- Confirmation mot de passe -->
+                <!-- ============================================= -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirmation du mot de passe
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        minlength="8"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+                <!-- ============================================= -->
+                <!-- Bouton activation -->
+                <!-- ============================================= -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Activer mon compte
+                </button>
+
+            </form>
+
+            <!-- ===================================================== -->
+            <!-- Messages -->
+            <!-- ===================================================== -->
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+            <!-- ===================================================== -->
+            <!-- Retour connexion -->
+            <!-- ===================================================== -->
+
+            <div class="small-link">
+
+                <a href="/">
+                    Retour à la connexion
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- Javascript -->
+    <!-- ========================================================= -->
+
+    <script src="/activate.js?v=activation-email-1"></script>
+
+</body>
+
+</html>
