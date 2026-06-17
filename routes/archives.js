@@ -225,6 +225,60 @@ router.get("/:id", (req, res) => {
 
 /*
 |--------------------------------------------------------------------------
+| DELETE /api/archives/:id
+|--------------------------------------------------------------------------
+|
+| Supprime définitivement une campagne archivée.
+| (Réservé aux administrateurs via le middleware global requireAdmin)
+|
+|--------------------------------------------------------------------------
+*/
+router.delete("/:id", (req, res) => {
+    try {
+        const archiveId = Number(req.params.id);
+
+        if (!archiveId) {
+            return res.status(400).json({
+                success: false,
+                message: "ID d'archive invalide."
+            });
+        }
+
+        // Sécurité : Vérifier que la campagne existe ET qu'elle est bien archivée
+        const campaign = db.prepare(`
+            SELECT id, name, archived 
+            FROM campaigns 
+            WHERE id = ? AND archived = 1
+        `).get(archiveId);
+
+        if (!campaign) {
+            return res.status(404).json({
+                success: false,
+                message: "Archive introuvable ou non archivée."
+            });
+        }
+
+        // Suppression de la campagne
+        // Les enregistrements liés (campaign_sectors, validations, street_validations)
+        // sont supprimés automatiquement grâce aux clés étrangères ON DELETE CASCADE.
+        db.prepare(`DELETE FROM campaigns WHERE id = ?`).run(archiveId);
+
+        return res.json({
+            success: true,
+            message: "L'archive a été supprimée avec succès."
+        });
+
+    } catch (error) {
+        console.error("Erreur DELETE /api/archives/:id :", error);
+        return res.status(500).json({
+            success: false,
+            message: "Erreur lors de la suppression de l'archive."
+        });
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
 | Export
 |--------------------------------------------------------------------------
 */

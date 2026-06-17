@@ -52,146 +52,56 @@ const router = express.Router();
 |--------------------------------------------------------------------------
 */
 
-router.get(
-    "/",
-    requireAuth,
-    (req, res) => {
-        try {
-            const user =
-                req.session.user;
+router.get("/", requireAuth, (req, res) => {
+    try {
+        const user = req.session.user;
+        const teamIds = getSessionTeamIds(req);
+        let campaigns = [];
 
-            const teamIds =
-                getSessionTeamIds(req);
+        // Requête unique avec calcul de progression intégré via JOIN
+        const query = `
+            SELECT 
+                c.id, c.name, c.team_id, c.created_at, c.updated_at,
+                t.name AS team_name, 
+                u.name AS created_by_name,
+                COUNT(DISTINCT cs.id) AS total_sectors,
+                COUNT(DISTINCT v.id) AS validated_sectors
+            FROM campaigns c
+            LEFT JOIN teams t ON t.id = c.team_id
+            LEFT JOIN users u ON u.id = c.created_by
+            LEFT JOIN campaign_sectors cs ON cs.campaign_id = c.id
+            LEFT JOIN validations v ON v.campaign_id = c.id AND v.sector_id = cs.sector_id
+            WHERE c.archived = 0
+            ${user.role === 'admin' ? '' : `AND c.team_id IN (${teamIds.map(() => '?').join(',')})`}
+            GROUP BY c.id
+            ORDER BY c.created_at DESC
+        `;
 
-            let campaigns = [];
-
-            if (user.role === "admin") {
-                campaigns =
-                    db.prepare(`
-                        SELECT
-                            c.id,
-                            c.name,
-                            c.team_id,
-                            c.created_at,
-                            c.updated_at,
-
-                            t.name AS team_name,
-                            u.name AS created_by_name
-
-                        FROM campaigns c
-
-                        LEFT JOIN teams t
-                            ON t.id = c.team_id
-
-                        LEFT JOIN users u
-                            ON u.id = c.created_by
-
-                        WHERE c.archived = 0
-
-                        ORDER BY c.created_at DESC
-                    `).all();
-            } else {
-                if (teamIds.length === 0) {
-                    return res.json({
-                        success: true,
-                        campaigns: []
-                    });
-                }
-
-                const placeholders =
-                    teamIds.map(() => "?").join(",");
-
-                campaigns =
-                    db.prepare(`
-                        SELECT
-                            c.id,
-                            c.name,
-                            c.team_id,
-                            c.created_at,
-                            c.updated_at,
-
-                            t.name AS team_name,
-                            u.name AS created_by_name
-
-                        FROM campaigns c
-
-                        LEFT JOIN teams t
-                            ON t.id = c.team_id
-
-                        LEFT JOIN users u
-                            ON u.id = c.created_by
-
-                        WHERE c.archived = 0
-                        AND c.team_id IN (${placeholders})
-
-                        ORDER BY c.created_at DESC
-                    `).all(
-                        ...teamIds
-                    );
+        if (user.role === "admin") {
+            campaigns = db.prepare(query).all();
+        } else {
+            if (teamIds.length === 0) {
+                return res.json({ success: true, campaigns: [] });
             }
-
-            const result =
-                campaigns.map(campaign => {
-                    const total =
-                        db.prepare(`
-                            SELECT COUNT(*) AS total
-                            FROM campaign_sectors
-                            WHERE campaign_id = ?
-                        `).get(
-                            campaign.id
-                        ).total;
-
-                    const validated =
-                        db.prepare(`
-                            SELECT COUNT(*) AS total
-                            FROM validations
-                            WHERE campaign_id = ?
-                        `).get(
-                            campaign.id
-                        ).total;
-
-                    return {
-                        ...campaign,
-
-                        can_manage:
-                            canManageCampaign(
-                                req,
-                                campaign
-                            ),
-
-                        total_sectors:
-                            total,
-
-                        validated_sectors:
-                            validated,
-
-                        progress:
-                            total === 0
-                                ? 0
-                                : Math.round(
-                                    (validated / total) * 100
-                                )
-                    };
-                });
-
-            return res.json({
-                success: true,
-                campaigns: result
-            });
-
-        } catch (error) {
-            console.error(
-                "Erreur GET /api/campaigns :",
-                error
-            );
-
-            return res.status(500).json({
-                success: false,
-                message: "Erreur lors du chargement des campagnes."
-            });
+            campaigns = db.prepare(query).all(...teamIds);
         }
+
+        // Ajout des permissions côté JS (plus léger que des requêtes SQL)
+        const result = campaigns.map(campaign => ({
+            ...campaign,
+            can_manage: canManageCampaign(req, campaign),
+            progress: campaign.total_sectors === 0 
+                ? 0 
+                : Math.round((campaign.validated_sectors / campaign.total_sectors) * 100)
+        }));
+
+        return res.json({ success: true, campaigns: result });
+
+    } catch (error) {
+        console.error("Erreur GET /api/campaigns : ", error);
+        return res.status(500).json({ success: false, message: "Erreur lors du chargement des campagnes." });
     }
-);
+});
 
 /*
 |--------------------------------------------------------------------------

@@ -12,7 +12,7 @@
 |
 | - campaigns-list.js
 | - campaigns-render.js
-| - campaigns-validation.js
+| - campaigns-validation.jsaaaaaa
 | - campaigns-modal.js
 |
 | Ce fichier ne fait que :

@@ -833,6 +833,33 @@
         </div>
 
     </div>
+	
+	<!-- ========================================================= -->
+<!-- Popup confirmation suppression archive -->
+<!-- ========================================================= -->
+<div id="deleteArchiveModal" class="modal hidden">
+    <div class="modal-content">
+        <h3>Supprimer une archive</h3>
+        
+        <p>Vous êtes sur le point de supprimer définitivement :</p>
+        <p><strong id="deleteArchiveName">Campagne</strong></p>
+        
+        <p class="warning-text">Cette action supprimera également :</p>
+        <ul class="delete-warning-list">
+            <li>Les secteurs de la campagne</li>
+            <li>Les validations de la campagne</li>
+            <li>Les validations des rues</li>
+            <li>Toutes les données associées</li>
+        </ul>
+        
+        <p class="warning-text">Cette action est irréversible.</p>
+        
+        <div class="modal-actions">
+            <button type="button" id="cancelDeleteArchiveBtn" class="btn">Annuler</button>
+            <button type="button" id="confirmDeleteArchiveBtn" class="btn btn-danger">Supprimer</button>
+        </div>
+    </div>
+</div>
 
     <!-- ========================================================= -->
     <!-- Messages globaux -->

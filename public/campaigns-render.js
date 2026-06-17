@@ -71,66 +71,38 @@ function renderCampaignMap() {
 | Affichage d'un secteur dans une campagne
 |--------------------------------------------------------------------------
 */
-
 function renderCampaignSector(sector) {
-    const sectorId =
-        Number(sector.id);
-
-    const validated =
-        Boolean(sector.validated_at);
-
-    const streets =
-        Array.isArray(sector.streets)
-            ? sector.streets
-            : [];
-
-    const totalStreets =
-        Number(sector.total_streets || streets.length || 0);
-
-    const validatedStreets =
-        Number(sector.validated_streets || 0);
-
-    const streetsProgress =
-        Number(sector.streets_progress || 0);
+    const sectorId = Number(sector.id);
+    const validated = Boolean(sector.validated_at);
+    
+    // Sécurité : s'assurer que streets est toujours un tableau
+    const streets = Array.isArray(sector.streets) ? sector.streets : [];
+    
+    const totalStreets = Number(sector.total_streets || streets.length || 0);
+    const validatedStreets = Number(sector.validated_streets || 0);
+    const streetsProgress = Number(sector.streets_progress || 0);
 
     return `
         <div class="card sector-card">
             <h4>
-                <span
-                    class="color-dot"
-                    style="background:${escapeHtml(sector.color || "#3388ff")}"
-                ></span>
-
+                <span class="color-dot" style="background:${escapeHtml(sector.color || "#3388ff")}"></span>
                 ${escapeHtml(sector.name)}
             </h4>
 
-            ${
-                totalStreets > 0
-                    ? `
-                        <p>
-                            Rues :
-                            <strong>${validatedStreets}/${totalStreets}</strong>
-                            (${streetsProgress}%)
-                        </p>
+            ${totalStreets > 0 ? `
+                <p>
+                    Rues : <strong>${validatedStreets}/${totalStreets}</strong> (${streetsProgress}%)
+                </p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:${streetsProgress}%"></div>
+                </div>
+            ` : `
+                <p>Aucune rue renseignée pour ce secteur.</p>
+            `}
 
-                        <div class="progress-bar">
-                            <div
-                                class="progress-fill"
-                                style="width:${streetsProgress}%"
-                            ></div>
-                        </div>
-                    `
-                    : `
-                        <p>
-                            Aucune rue renseignée pour ce secteur.
-                        </p>
-                    `
-            }
-
-            ${
-                validated
-                    ? renderValidatedSector(sector)
-                    : renderPendingSector(sectorId, streets)
+            ${validated 
+                ? renderValidatedSector(sector) 
+                : renderPendingSector(sectorId, streets)
             }
         </div>
     `;

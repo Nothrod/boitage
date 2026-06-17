@@ -31,6 +31,26 @@ const archivesContainer =
 
 /*
 |--------------------------------------------------------------------------
+| Raccourcis HTML - Popup suppression
+|--------------------------------------------------------------------------
+*/
+
+const deleteArchiveModal =
+    document.getElementById("deleteArchiveModal");
+
+const deleteArchiveName =
+    document.getElementById("deleteArchiveName");
+
+const cancelDeleteArchiveBtn =
+    document.getElementById("cancelDeleteArchiveBtn");
+
+const confirmDeleteArchiveBtn =
+    document.getElementById("confirmDeleteArchiveBtn");
+
+let archiveToDeleteId = null;
+
+/*
+|--------------------------------------------------------------------------
 | Chargement des archives
 |--------------------------------------------------------------------------
 */
@@ -94,12 +114,22 @@ async function loadArchives() {
                     </strong>
                 </p>
 
-                <button
-                    class="btn btn-primary"
-                    onclick="loadArchiveDetail(${Number(archive.id)})"
-                >
-                    Voir détail
-                </button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button
+                        class="btn btn-primary"
+                        onclick="loadArchiveDetail(${Number(archive.id)})"
+                    >
+                        Voir détail
+                    </button>
+
+                    <button
+                        class="btn btn-danger"
+                        style="background-color: #dc3545; color: white; border: none;"
+                        onclick="openDeleteArchiveModal(${Number(archive.id)}, '${escapeHtml(archive.name)}')"
+                    >
+                        Supprimer
+                    </button>
+                </div>
 
             </div>
         `).join("");
@@ -303,6 +333,112 @@ async function loadArchiveDetail(id) {
 
 /*
 |--------------------------------------------------------------------------
+| Ouverture popup suppression archive
+|--------------------------------------------------------------------------
+*/
+
+function openDeleteArchiveModal(id, name) {
+    if (!deleteArchiveModal) {
+        showMessage(
+            "Popup de suppression introuvable dans backend.html.",
+            "error"
+        );
+        return;
+    }
+
+    archiveToDeleteId = Number(id);
+
+    if (deleteArchiveName) {
+        deleteArchiveName.textContent = name || "cette archive";
+    }
+
+    deleteArchiveModal.classList.remove("hidden");
+}
+
+/*
+|--------------------------------------------------------------------------
+| Fermeture popup suppression archive
+|--------------------------------------------------------------------------
+*/
+
+function closeDeleteArchiveModal() {
+    if (!deleteArchiveModal) {
+        return;
+    }
+
+    archiveToDeleteId = null;
+    deleteArchiveModal.classList.add("hidden");
+}
+
+if (cancelDeleteArchiveBtn) {
+    cancelDeleteArchiveBtn.addEventListener(
+        "click",
+        closeDeleteArchiveModal
+    );
+}
+
+if (deleteArchiveModal) {
+    deleteArchiveModal.addEventListener("click", event => {
+        if (event.target === deleteArchiveModal) {
+            closeDeleteArchiveModal();
+        }
+    });
+}
+
+/*
+|--------------------------------------------------------------------------
+| Suppression archive confirmée
+|--------------------------------------------------------------------------
+*/
+
+async function confirmDeleteArchive() {
+    if (!archiveToDeleteId) {
+        showMessage(
+            "Aucune archive sélectionnée.",
+            "error"
+        );
+        return;
+    }
+
+    try {
+        if (confirmDeleteArchiveBtn) {
+            confirmDeleteArchiveBtn.disabled = true;
+            confirmDeleteArchiveBtn.textContent = "Suppression...";
+        }
+
+        const data = await api(`/api/archives/${Number(archiveToDeleteId)}`, {
+            method: "DELETE"
+        });
+
+        closeDeleteArchiveModal();
+
+        if (data && data.success) {
+            showMessage(data.message || "Archive supprimée.", "success");
+            loadArchives();
+        } else {
+            showMessage(data?.message || "Erreur lors de la suppression.", "error");
+        }
+
+    } catch (error) {
+        console.error("Erreur confirmDeleteArchive :", error);
+        showMessage(error.message || "Erreur lors de la suppression.", "error");
+    } finally {
+        if (confirmDeleteArchiveBtn) {
+            confirmDeleteArchiveBtn.disabled = false;
+            confirmDeleteArchiveBtn.textContent = "Supprimer";
+        }
+    }
+}
+
+if (confirmDeleteArchiveBtn) {
+    confirmDeleteArchiveBtn.addEventListener(
+        "click",
+        confirmDeleteArchive
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
 | Exposition globale
 |--------------------------------------------------------------------------
 */
@@ -312,3 +448,6 @@ window.loadArchives =
 
 window.loadArchiveDetail =
     loadArchiveDetail;
+
+window.openDeleteArchiveModal =
+    openDeleteArchiveModal;

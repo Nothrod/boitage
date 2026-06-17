@@ -76,26 +76,30 @@ async function loadCampaigns() {
 */
 
 function renderCampaignCard(campaign) {
-    const campaignId =
-        Number(campaign.id);
+    const campaignId = Number(campaign.id);
+    const campaignName = String(campaign.name || "");
+    const progress = Number(campaign.progress || 0);
+    const validatedSectors = Number(campaign.validated_sectors || 0);
+    const totalSectors = Number(campaign.total_sectors || 0);
 
-    const campaignName =
-        String(campaign.name || "");
-
-    const progress =
-        Number(campaign.progress || 0);
-
-    const validatedSectors =
-        Number(campaign.validated_sectors || 0);
-
-    const totalSectors =
-        Number(campaign.total_sectors || 0);
+    // Formatage de la date de création
+    const dateCreation = new Date(campaign.created_at).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
 
     return `
         <div class="card">
             <h3>
                 ${escapeHtml(campaignName)}
             </h3>
+
+            <!-- Ajout des informations Créateur et Date -->
+            <p style="font-size: 0.9em; color: #666;">
+                <strong>Créée par :</strong> ${escapeHtml(campaign.created_by_name || 'Inconnu')} 
+                | <strong>Date :</strong> ${dateCreation}
+            </p>
 
             <p>
                 Équipe :
