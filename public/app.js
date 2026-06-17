@@ -305,6 +305,13 @@ function showSection(sectionName) {
     ) {
         loadUsers();
     }
+	
+	if (
+		sectionName === "registrations" &&
+		typeof loadRegistrations === "function"
+	) {
+		loadRegistrations();
+	}
 
     if (
         sectionName === "teams" &&

@@ -102,6 +102,10 @@
             >
                 👥 Utilisateurs
             </button>
+			
+			<button class="menu-btn admin-only" data-section="registrations">
+    📋 Demandes d'inscription
+</button>
 
             <button
                 id="menuTeams"
@@ -343,6 +347,19 @@
                 </div>
 
             </section>
+			
+            <!-- ================================================ -->
+            <!-- Section Demande -->
+            <!-- ================================================ -->
+			
+			<div id="registrationsSection" class="section hidden">
+    <div class="section-header">
+        <h2>Demandes d'inscription</h2>
+    </div>
+    <div id="registrationsContainer">
+        <p>Chargement...</p>
+    </div>
+</div>
 
             <!-- ================================================ -->
             <!-- Section équipes -->
@@ -887,6 +904,7 @@
     <script src="/users.js?v=users-teams-4"></script>
     <script src="/archives.js?v=archives-1"></script>
     <script src="/profile.js?v=profile-teams-2"></script>
+	<script src="registrations.js"></script>
 
 </body>
 

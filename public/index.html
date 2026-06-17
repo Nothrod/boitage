@@ -80,6 +80,8 @@
                     >
 
                 </div>
+				
+				
 
                 <div class="form-group">
 
@@ -96,6 +98,8 @@
                     >
 
                 </div>
+				
+				
 
                 <button
                     type="submit"
@@ -105,6 +109,44 @@
                 </button>
 
             </form>
+			
+			<p class="small-link">
+    <a href="#" id="registerLink">Demander un compte</a>
+</p>
+
+<form id="registerForm" style="display: none; margin-top: 20px;">
+    <hr>
+    <h3 style="margin-top: 0;">Demande de création de compte</h3>
+    
+    <div class="form-group">
+        <label for="registerName">Nom complet</label>
+        <input type="text" id="registerName" required>
+    </div>
+
+    <div class="form-group">
+        <label for="registerUsername">Identifiant souhaité</label>
+        <input type="text" id="registerUsername" required>
+    </div>
+
+    <div class="form-group">
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" required>
+        <small class="muted">Vous recevrez un email lors de la validation de votre compte.</small>
+    </div>
+
+    <div class="form-group">
+        <label>Équipe(s)</label>
+        <div id="registerTeams" class="checkbox-list">
+            <p class="muted">Chargement des équipes...</p>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%;">
+        Soumettre la demande
+    </button>
+
+    <div id="registerMessage" class="message"></div>
+</form>
 
             <!--
             |--------------------------------------------------------------------------
@@ -195,6 +237,7 @@
     -->
 
     <script src="/login.js"></script>
+	<script src="register.js"></script>
 
 </body>
 

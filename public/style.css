@@ -742,3 +742,24 @@ hr {
     width: 100%;
     height: 500px;
 }
+
+.registration-card {
+    border-left: 6px solid #f59e0b;
+}
+
+.registration-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.registration-header h4 {
+    margin: 0;
+}
+
+.registration-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}

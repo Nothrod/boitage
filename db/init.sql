@@ -392,3 +392,35 @@ ON logs(user_id);
 
 CREATE INDEX IF NOT EXISTS idx_logs_created_at
 ON logs(created_at);
+
+/*
+|--------------------------------------------------------------------------
+| Demandes d'inscription
+|--------------------------------------------------------------------------
+*/
+
+CREATE TABLE IF NOT EXISTS registration_requests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    name TEXT NOT NULL,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    team_ids TEXT NOT NULL DEFAULT '[]',
+    token TEXT,
+    status TEXT NOT NULL DEFAULT 'pending'
+        CHECK (status IN ('pending', 'approved', 'rejected')),
+    
+    user_id INTEGER,
+    processed_by INTEGER,
+    processed_at TEXT,
+
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL,
+
+    FOREIGN KEY (processed_by)
+        REFERENCES users(id)
+        ON DELETE SET NULL
+);

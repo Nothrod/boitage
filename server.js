@@ -41,6 +41,7 @@ const usersRoutes = require("./routes/users");
 const sectorsRoutes = require("./routes/sectors");
 const campaignsRoutes = require("./routes/campaigns");
 const archivesRoutes = require("./routes/archives");
+const registrationsRoutes = require("./routes/registrations");
 
 /*
 |--------------------------------------------------------------------------
@@ -733,6 +734,40 @@ try {
                 ON DELETE CASCADE
         )
     `).run();
+	
+	db.prepare(`
+    CREATE TABLE IF NOT EXISTS registration_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL,
+        team_ids TEXT NOT NULL DEFAULT '[]',
+        token TEXT,
+        status TEXT NOT NULL DEFAULT 'pending'
+            CHECK (status IN ('pending', 'approved', 'rejected')),
+        user_id INTEGER,
+        processed_by INTEGER,
+        processed_at TEXT,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+        FOREIGN KEY (processed_by) REFERENCES users(id) ON DELETE SET NULL
+    )
+`).run();
+
+db.prepare(`
+    CREATE INDEX IF NOT EXISTS idx_registration_requests_status
+    ON registration_requests(status)
+`).run();
+
+db.prepare(`
+    CREATE INDEX IF NOT EXISTS idx_registration_requests_username
+    ON registration_requests(username)
+`).run();
+
+db.prepare(`
+    CREATE INDEX IF NOT EXISTS idx_registration_requests_created_at
+    ON registration_requests(created_at)
+`).run();	
 
     /*
     |--------------------------------------------------------------------------
@@ -1008,6 +1043,7 @@ if (teamsRoutes) {
 
 app.use("/api/campaigns", campaignsRoutes);
 app.use("/api/archives", archivesRoutes);
+app.use("/api", registrationsRoutes);
 
 /*
 |--------------------------------------------------------------------------
